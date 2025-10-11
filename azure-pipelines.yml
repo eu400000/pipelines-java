@@ -10,6 +10,21 @@ pool:
   vmImage: ubuntu-latest
 
 steps:
+- checkout: self
+  fetchDepth: 0
+
+- task: SonarCloudPrepare@3
+  inputs:
+    SonarQube: 'SonarCloud'
+    organization: 'dllgroup'
+    scannerMode: 'other'
+    extraProperties: |
+      # Additional properties that will be passed to the scanner,
+      # Put one key=value per line, example:
+      # sonar.exclusions=**/*.bin
+      sonar.projectKey=1DGB.demo-pipeline
+      sonar.projectName=1DGB.demo-pipeline
+
 - task: Maven@3
   inputs:
     mavenPomFile: 'pom.xml'
@@ -21,4 +36,3 @@ steps:
     testResultsFiles: '**/surefire-reports/TEST-*.xml'
     goals: 'package'
 
-#tmp remark
