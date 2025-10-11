@@ -1,3 +1,4 @@
+[![Build Status](https://dllgroup.visualstudio.com/DLLGroup/_apis/build/status%2Feu400000.pipelines-java?branchName=master)](https://dllgroup.visualstudio.com/DLLGroup/_build/latest?definitionId=3875&branchName=master)
 
 # Contributing
 
