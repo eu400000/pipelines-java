@@ -9,6 +9,13 @@ trigger:
 pool:
   vmImage: ubuntu-latest
 
+
+resources:
+  repositories:
+  - repository: CICDTemplates
+    type: git
+    name: DLLGroup/VSTS.CICD-Capability-Templates
+
 steps:
 - checkout: self
   fetchDepth: 0
