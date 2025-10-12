@@ -16,42 +16,48 @@ resources:
     type: git
     name: DLLGroup/VSTS.CICD-Capability-Templates
 
-steps:
-- checkout: self
-  fetchDepth: 0
 
-- task: SonarCloudPrepare@3
-  inputs:
-    SonarQube: 'SonarCloud'
-    organization: 'dllgroup'
-    scannerMode: 'other'
-    extraProperties: |
-      # Additional properties that will be passed to the scanner,
-      # Put one key=value per line, example:
-      # sonar.exclusions=**/*.bin
-      sonar.projectKey=1DGB.demo-pipeline
-      sonar.projectName=1DGB.demo-pipeline
 
-- task: Maven@3
-  inputs:
-    mavenPomFile: 'pom.xml'
-    publishJUnitResults: true
-    testResultsFiles: '**/surefire-reports/TEST-*.xml'
-    javaHomeOption: 'JDKVersion'
-    jdkVersionOption: '1.11'
-    mavenVersionOption: 'Default'
-    mavenOptions: '-Xmx3072m'
-    mavenAuthenticateFeed: false
-    effectivePomSkip: false
-    sonarQubeRunAnalysis: true
-    sqMavenPluginVersionChoice: 'latest'
+jobs:
+- template: DLL_CodeInspector/DLL_CodeInspector.yaml@CICDTemplates
 
-- task: SonarCloudPublish@3
-  inputs:
-    pollingTimeoutSec: '300'
+- job: CI 
+  steps:
+  - checkout: self
+    fetchDepth: 0
 
-- task: PublishBuildArtifacts@1
-  inputs:
-    PathtoPublish: '$(Build.ArtifactStagingDirectory)'
-    ArtifactName: 'drop'
-    publishLocation: 'Container'
+  - task: SonarCloudPrepare@3
+    inputs:
+      SonarQube: 'SonarCloud'
+      organization: 'dllgroup'
+      scannerMode: 'other'
+      extraProperties: |
+        # Additional properties that will be passed to the scanner,
+        # Put one key=value per line, example:
+        # sonar.exclusions=**/*.bin
+        sonar.projectKey=1DGB.demo-pipeline
+        sonar.projectName=1DGB.demo-pipeline
+
+  - task: Maven@3
+    inputs:
+      mavenPomFile: 'pom.xml'
+      publishJUnitResults: true
+      testResultsFiles: '**/surefire-reports/TEST-*.xml'
+      javaHomeOption: 'JDKVersion'
+      jdkVersionOption: '1.11'
+      mavenVersionOption: 'Default'
+      mavenOptions: '-Xmx3072m'
+      mavenAuthenticateFeed: false
+      effectivePomSkip: false
+      sonarQubeRunAnalysis: true
+      sqMavenPluginVersionChoice: 'latest'
+
+  - task: SonarCloudPublish@3
+    inputs:
+      pollingTimeoutSec: '300'
+
+  - task: PublishBuildArtifacts@1
+    inputs:
+      PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+      ArtifactName: 'drop'
+      publishLocation: 'Container'
